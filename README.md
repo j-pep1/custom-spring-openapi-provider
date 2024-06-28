@@ -10,15 +10,17 @@ Specifically, this provider modifies the active patterns for request mappings by
 
 ### Example
 
-If there are two endpoints with the same path `"/{containerId}"` but different parameters, such as:
+If there are three endpoints with the same path `"/api/something/{id}"` but different parameters, such as:
 
-- `@PutMapping(path = "/{containerId}", params = {"!enabled"})`
-- `@PutMapping(path = "/{containerId}", params = {"enabled"})`
+- `@GetMapping(path = "/api/something/{id}", params = {"foo"})`
+- `@GetMapping(path = "/api/something/{id}", params = {"bar"})`
+- `@GetMapping(path = "/api/something/{id}", params = {"!foo", "!bar"})`
 
 The resulting paths would be:
 
-- `"/{containerId}?enabled"`
-- `"/{containerId}?enabled=false"`
+- `"/api/something/{id}?foo"`
+- `"/api/something/{id}?bar"`
+- `"/api/something/{id}"`
 
 This class overrides the `SpringWebMvcProvider#getActivePatterns(Object)` method to achieve this functionality.
 
@@ -39,10 +41,10 @@ https://springdoc.org
 
 ```
 @Configuration
-public class SwaggerConfig {
+public class OpenApiConfig {
 
   @Bean
-  public SpringWebProvider springWebProvider() {
+  public SpringWebProvider openApiProvider() {
     return new CustomSpringOpenApiProvider();
   }
 
